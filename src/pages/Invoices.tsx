@@ -72,7 +72,7 @@ export function InvoicesPage() {
     <div class="info">
       <div><strong>Invoice:</strong> ${sale.invoiceNumber}</div>
       <div><strong>Date:</strong> ${new Date(sale.createdAt).toLocaleString()}</div>
-      <div><strong>Customer:</strong> ${sale.customerName || 'Walk-in Customer'}</div>
+      <div><strong>Customer:</strong> ${sale.customerName || 'Walk-in Customer'}${sale.customerPhone ? ` (${sale.customerPhone})` : ''}</div>
       <div><strong>Cashier:</strong> ${sale.cashierName}</div>
       <div><strong>Payment:</strong> ${sale.paymentMethod}</div>
     </div>
@@ -132,7 +132,10 @@ export function InvoicesPage() {
               {filteredSales.length > 0 ? filteredSales.map(sale => (
                 <tr key={sale.id} className="border-b border-gray-50 hover:bg-gray-50/50">
                   <td className="px-4 py-3 font-mono text-xs font-medium text-blue-600">{sale.invoiceNumber}</td>
-                  <td className="px-4 py-3 text-gray-700">{sale.customerName || 'Walk-in'}</td>
+                  <td className="px-4 py-3">
+                    <p className="text-gray-700">{sale.customerName || 'Walk-in'}</p>
+                    {sale.customerPhone && <p className="text-xs text-gray-400">{sale.customerPhone}</p>}
+                  </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{new Date(sale.createdAt).toLocaleDateString()}</td>
                   <td className="px-4 py-3 text-right font-medium">{formatCurrency(sale.total)}</td>
                   <td className="px-4 py-3 text-center"><Badge variant="info">{sale.paymentMethod}</Badge></td>
@@ -204,6 +207,7 @@ export function InvoicesPage() {
                   <div>
                     <p className="text-gray-500">Customer</p>
                     <p className="font-medium">{viewInvoice.customerName || 'Walk-in'}</p>
+                    {viewInvoice.customerPhone && <p className="text-xs text-gray-400">{viewInvoice.customerPhone}</p>}
                   </div>
                   <div className="text-right">
                     <p className="text-gray-500">Cashier</p>

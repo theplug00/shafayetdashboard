@@ -33,6 +33,20 @@ export interface SaleItem {
   total: number;
 }
 
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  notes: string;
+  totalSpent: number;
+  totalOrders: number;
+  loyaltyPoints: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Sale {
   id: string;
   invoiceNumber: string;
@@ -46,7 +60,9 @@ export interface Sale {
   paymentMethod: string;
   cashierId: string;
   cashierName: string;
+  customerId: string;
   customerName: string;
+  customerPhone: string;
   status: 'paid' | 'partial' | 'unpaid';
   createdAt: string;
 }

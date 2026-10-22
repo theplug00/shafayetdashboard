@@ -1,4 +1,4 @@
-import { User, Product, Sale, StockMovement, Expense, BusinessSettings, AuditLog } from '../types';
+import { User, Product, Sale, StockMovement, Expense, BusinessSettings, AuditLog, Customer } from '../types';
 
 const DB_KEYS = {
   users: 'stylehub_users',
@@ -9,6 +9,7 @@ const DB_KEYS = {
   settings: 'stylehub_settings',
   auditLogs: 'stylehub_audit_logs',
   invoiceCounter: 'stylehub_invoice_counter',
+  customers: 'stylehub_customers',
 };
 
 function get<T>(key: string): T[] {
@@ -217,5 +218,59 @@ export const AuditLogDB = {
     logs.push(newLog);
     set(DB_KEYS.auditLogs, logs);
     return newLog;
+  },
+};
+
+// Customer operations
+export const CustomerDB = {
+  getAll: (): Customer[] => get<Customer>(DB_KEYS.customers),
+  getById: (id: string): Customer | undefined => get<Customer>(DB_KEYS.customers).find(c => c.id === id),
+  getByPhone: (phone: string): Customer | undefined => get<Customer>(DB_KEYS.customers).find(c => c.phone === phone),
+  search: (query: string): Customer[] => {
+    const q = query.toLowerCase();
+    return get<Customer>(DB_KEYS.customers).filter(c =>
+      c.name.toLowerCase().includes(q) || c.phone.includes(q) || c.email.toLowerCase().includes(q)
+    );
+  },
+  create: (customer: Omit<Customer, 'id' | 'totalSpent' | 'totalOrders' | 'loyaltyPoints' | 'createdAt' | 'updatedAt'>): Customer => {
+    const customers = get<Customer>(DB_KEYS.customers);
+    const newCustomer: Customer = {
+      ...customer,
+      id: generateId(),
+      totalSpent: 0,
+      totalOrders: 0,
+      loyaltyPoints: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    customers.push(newCustomer);
+    set(DB_KEYS.customers, customers);
+    return newCustomer;
+  },
+  update: (id: string, data: Partial<Customer>): Customer | null => {
+    const customers = get<Customer>(DB_KEYS.customers);
+    const idx = customers.findIndex(c => c.id === id);
+    if (idx === -1) return null;
+    customers[idx] = { ...customers[idx], ...data, updatedAt: new Date().toISOString() };
+    set(DB_KEYS.customers, customers);
+    return customers[idx];
+  },
+  delete: (id: string): boolean => {
+    const customers = get<Customer>(DB_KEYS.customers);
+    const filtered = customers.filter(c => c.id !== id);
+    if (filtered.length === customers.length) return false;
+    set(DB_KEYS.customers, filtered);
+    return true;
+  },
+  updateAfterSale: (customerId: string, amount: number): void => {
+    if (!customerId) return;
+    const customers = get<Customer>(DB_KEYS.customers);
+    const idx = customers.findIndex(c => c.id === customerId);
+    if (idx === -1) return;
+    customers[idx].totalSpent += amount;
+    customers[idx].totalOrders += 1;
+    customers[idx].loyaltyPoints += Math.floor(amount);
+    customers[idx].updatedAt = new Date().toISOString();
+    set(DB_KEYS.customers, customers);
   },
 };

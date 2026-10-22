@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { LayoutDashboard, Package, ShoppingCart, FileText, BarChart3, Settings, LogOut, Menu, X, ChevronLeft, Store } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, FileText, BarChart3, Settings, LogOut, Menu, X, ChevronLeft, Store, Users } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ interface LayoutProps {
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'crm', label: 'CRM / Quick Sale', icon: Users },
   { id: 'products', label: 'Products & Inventory', icon: Package },
   { id: 'sales', label: 'Sales', icon: ShoppingCart },
   { id: 'invoices', label: 'Invoices', icon: FileText },

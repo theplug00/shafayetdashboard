@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { StatCard } from '../components/Common';
-import { DollarSign, Package, ShoppingCart, AlertTriangle, TrendingUp, Clock, ArrowUpRight } from 'lucide-react';
+import { DollarSign, Package, ShoppingCart, AlertTriangle, TrendingUp, Clock, ArrowUpRight, Users } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
 export function DashboardPage() {
-  const { products, sales, settings, stockMovements } = useApp();
+  const { products, sales, settings, stockMovements, customers } = useApp();
 
   const stats = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -78,7 +78,7 @@ export function DashboardPage() {
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
           <div className="p-2 bg-green-50 rounded-lg"><TrendingUp className="w-5 h-5 text-green-600" /></div>
           <div>
@@ -98,6 +98,13 @@ export function DashboardPage() {
           <div>
             <p className="text-sm text-gray-500">This Month</p>
             <p className="text-lg font-bold text-gray-900">{formatCurrency(stats.monthRevenue)}</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
+          <div className="p-2 bg-indigo-50 rounded-lg"><Users className="w-5 h-5 text-indigo-600" /></div>
+          <div>
+            <p className="text-sm text-gray-500">Customers</p>
+            <p className="text-lg font-bold text-gray-900">{customers.length}</p>
           </div>
         </div>
       </div>

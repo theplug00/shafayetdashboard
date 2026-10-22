@@ -3,6 +3,7 @@ import { AppProvider, useApp } from './context/AppContext';
 import { Layout } from './components/Layout';
 import { LoginPage } from './pages/Login';
 import { DashboardPage } from './pages/Dashboard';
+import { CRMPage } from './pages/CRM';
 import { ProductsPage } from './pages/Products';
 import { SalesPage } from './pages/Sales';
 import { InvoicesPage } from './pages/Invoices';
@@ -20,6 +21,7 @@ function AppContent() {
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard': return <DashboardPage />;
+      case 'crm': return <CRMPage />;
       case 'products': return <ProductsPage />;
       case 'sales': return <SalesPage />;
       case 'invoices': return <InvoicesPage />;

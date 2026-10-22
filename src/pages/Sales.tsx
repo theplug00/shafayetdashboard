@@ -85,7 +85,10 @@ export function SalesPage() {
               {filteredSales.length > 0 ? filteredSales.map(sale => (
                 <tr key={sale.id} className="border-b border-gray-50 hover:bg-gray-50/50">
                   <td className="px-4 py-3 font-mono text-xs font-medium text-blue-600">{sale.invoiceNumber}</td>
-                  <td className="px-4 py-3 text-gray-700">{sale.customerName || 'Walk-in'}</td>
+                  <td className="px-4 py-3">
+                    <p className="text-gray-700">{sale.customerName || 'Walk-in'}</p>
+                    {sale.customerPhone && <p className="text-xs text-gray-400">{sale.customerPhone}</p>}
+                  </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{new Date(sale.createdAt).toLocaleDateString()}</td>
                   <td className="px-4 py-3 text-gray-600">{sale.items.length}</td>
                   <td className="px-4 py-3 text-right font-medium">{formatCurrency(sale.total)}</td>
@@ -141,7 +144,9 @@ export function SalesPage() {
               paid: saleData.paid,
               balance: saleData.balance,
               paymentMethod: saleData.paymentMethod,
-              customerName: saleData.customerName,
+              customerId: saleData.customerId || '',
+              customerName: saleData.customerName || '',
+              customerPhone: saleData.customerPhone || '',
               status: saleData.status,
               cashierId: currentUser!.id,
               cashierName: currentUser!.name,
@@ -223,7 +228,7 @@ function NewSaleModal({ onClose, onSave }: { onClose: () => void; onSave: (data:
     const status = balance === 0 ? 'paid' : paidAmt > 0 ? 'partial' : 'unpaid';
     onSave({
       items, subtotal, discount: discountAmt, tax: taxAmt, total,
-      paid: paidAmt, balance, paymentMethod, customerName, status,
+      paid: paidAmt, balance, paymentMethod, customerId: '', customerName, customerPhone: '', status,
     });
   };
 

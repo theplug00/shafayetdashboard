@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { User, Product, Sale, StockMovement, Expense, BusinessSettings, AuditLog } from '../types';
-import { initializeDatabase, UserDB, ProductDB, SaleDB, StockMovementDB, ExpenseDB, SettingsDB, AuditLogDB } from '../services/database';
+import { User, Product, Sale, StockMovement, Expense, BusinessSettings, AuditLog, Customer } from '../types';
+import { initializeDatabase, UserDB, ProductDB, SaleDB, StockMovementDB, ExpenseDB, SettingsDB, AuditLogDB, CustomerDB } from '../services/database';
 
 interface AppState {
   currentUser: User | null;
@@ -10,6 +10,7 @@ interface AppState {
   expenses: Expense[];
   settings: BusinessSettings;
   auditLogs: AuditLog[];
+  customers: Customer[];
   login: (username: string, password: string) => boolean;
   logout: () => void;
   refreshProducts: () => void;
@@ -18,6 +19,7 @@ interface AppState {
   refreshExpenses: () => void;
   refreshAuditLogs: () => void;
   refreshSettings: () => void;
+  refreshCustomers: () => void;
   addAuditLog: (action: string, entity: string, entityId: string, details: string) => void;
 }
 
@@ -29,6 +31,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [sales, setSales] = useState<Sale[]>([]);
   const [stockMovements, setStockMovements] = useState<StockMovement[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [settings, setSettings] = useState<BusinessSettings>({
     businessName: 'StyleHub Fashion',
     address: '123 Market Street, Accra, Ghana',
@@ -56,6 +59,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setSales(SaleDB.getAll());
     setStockMovements(StockMovementDB.getAll());
     setExpenses(ExpenseDB.getAll());
+    setCustomers(CustomerDB.getAll());
     const s = SettingsDB.get();
     if (s) setSettings(s);
     setAuditLogs(AuditLogDB.getAll());
@@ -66,6 +70,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const refreshStockMovements = useCallback(() => setStockMovements(StockMovementDB.getAll()), []);
   const refreshExpenses = useCallback(() => setExpenses(ExpenseDB.getAll()), []);
   const refreshAuditLogs = useCallback(() => setAuditLogs(AuditLogDB.getAll()), []);
+  const refreshCustomers = useCallback(() => setCustomers(CustomerDB.getAll()), []);
   const refreshSettings = useCallback(() => {
     const s = SettingsDB.get();
     if (s) setSettings(s);
@@ -98,9 +103,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AppContext.Provider value={{
-      currentUser, products, sales, stockMovements, expenses, settings, auditLogs,
+      currentUser, products, sales, stockMovements, expenses, settings, auditLogs, customers,
       login, logout, refreshProducts, refreshSales, refreshStockMovements,
-      refreshExpenses, refreshAuditLogs, refreshSettings, addAuditLog,
+      refreshExpenses, refreshAuditLogs, refreshSettings, refreshCustomers, addAuditLog,
     }}>
       {children}
     </AppContext.Provider>
